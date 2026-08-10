@@ -1,0 +1,9 @@
+{
+  "name": "fox-log-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fox Log — landing page de logística multimodal (sitio estático)",
+  "scripts": {
+    "dev": "npx --yes serve . -l 3000"
+  }
+}
