@@ -1,6 +1,6 @@
-# Fox Log — Landing Page
+# FoxLog — Landing Page
 
-Landing page estática para Fox Log, empresa de logística multimodal (transporte
+Landing page estática para FoxLog, empresa de logística multimodal (transporte
 terrestre, aéreo, marítimo y ferroviario).
 
 ## Estructura

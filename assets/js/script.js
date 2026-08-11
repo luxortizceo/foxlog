@@ -195,7 +195,7 @@ if (quoteForm) {
       });
 
       if (response.ok) {
-        formNote.textContent = '¡Gracias! Un asesor de Fox Log te contactará pronto.';
+        formNote.textContent = '¡Gracias! Un asesor de FoxLog te contactará pronto.';
         quoteForm.reset();
       } else {
         const data = await response.json().catch(() => null);
