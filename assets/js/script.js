@@ -101,39 +101,6 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   }
 })();
 
-// Coverage map: route lines draw themselves in when the section scrolls
-// into view, instead of just appearing.
-(() => {
-  const routes = document.querySelectorAll('.coverage-map .route');
-  if (!routes.length) return;
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  routes.forEach((path) => {
-    const length = path.getTotalLength();
-    path.style.strokeDasharray = String(length);
-    path.style.strokeDashoffset = reduceMotion ? '0' : String(length);
-  });
-
-  if (reduceMotion) return;
-
-  const section = document.querySelector('.coverage');
-  if (!section || !('IntersectionObserver' in window)) return;
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      routes.forEach((path, i) => {
-        path.style.transition = `stroke-dashoffset 1.1s ease ${i * 0.15}s`;
-        path.style.strokeDashoffset = '0';
-      });
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.35 });
-
-  observer.observe(section);
-})();
-
 // Animated stat counters
 const statNumbers = document.querySelectorAll('.stat-number');
 
