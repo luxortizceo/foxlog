@@ -750,6 +750,16 @@ p { margin: 0 0 1em; color: var(--gray-600); }
 .footer-col a { font-size: 0.9rem; color: var(--gray-300); transition: color .15s ease; }
 .footer-col a:hover { color: var(--orange-light); }
 .footer-col li { font-size: 0.9rem; }
+.footer-sublabel {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
 
 .footer-bottom {
   display: flex;
