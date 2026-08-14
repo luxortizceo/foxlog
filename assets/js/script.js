@@ -101,6 +101,39 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   }
 })();
 
+// Coverage map: route lines draw themselves in when the section scrolls
+// into view, instead of just appearing.
+(() => {
+  const routes = document.querySelectorAll('.coverage-map .route');
+  if (!routes.length) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  routes.forEach((path) => {
+    const length = path.getTotalLength();
+    path.style.strokeDasharray = String(length);
+    path.style.strokeDashoffset = reduceMotion ? '0' : String(length);
+  });
+
+  if (reduceMotion) return;
+
+  const section = document.querySelector('.coverage');
+  if (!section || !('IntersectionObserver' in window)) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      routes.forEach((path, i) => {
+        path.style.transition = `stroke-dashoffset 1.1s ease ${i * 0.15}s`;
+        path.style.strokeDashoffset = '0';
+      });
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.35 });
+
+  observer.observe(section);
+})();
+
 // Animated stat counters
 const statNumbers = document.querySelectorAll('.stat-number');
 
@@ -172,6 +205,70 @@ if (quoteModal && quoteOpen && quoteClose) {
       openQuoteModal();
     });
   }
+}
+
+// Service cards: clicking one opens a shared modal with the fuller
+// description instead of cramming everything onto the card.
+const SERVICE_INFO = {
+  terrestre: {
+    icon: '🚛',
+    title: 'Transporte terrestre',
+    desc: 'Nuestra especialidad: arrastre de contenedor del puerto a tu bodega o al ferrocarril, y flete nacional en las principales zonas del país. Importación y exportación directa hacia Laredo, Texas, el cruce fronterizo más importante para el comercio con Estados Unidos.',
+  },
+  aereo: {
+    icon: '✈️',
+    title: 'Transporte aéreo',
+    desc: 'Para carga urgente o sensible al tiempo: tránsitos de 24 a 72 horas hacia los principales hubs aéreos del mundo, con seguimiento en tiempo real desde el despegue hasta la entrega.',
+  },
+  maritimo: {
+    icon: '🚢',
+    title: 'Transporte marítimo',
+    desc: 'Operamos directamente en los puertos de Altamira, Veracruz, Manzanillo y Lázaro Cárdenas. Carga FCL y LCL con las navieras más confiables del mercado, ideal para grandes volúmenes.',
+  },
+  ferroviario: {
+    icon: '🚆',
+    title: 'Transporte ferroviario',
+    desc: 'Alternativa sostenible y de alto tonelaje para cargas de gran volumen en rutas continentales, con menor costo por unidad transportada.',
+  },
+};
+
+const serviceModal = document.getElementById('service-modal');
+const serviceClose = document.getElementById('service-close');
+const serviceModalIcon = document.getElementById('service-modal-icon');
+const serviceModalTitle = document.getElementById('service-modal-title');
+const serviceModalDesc = document.getElementById('service-modal-desc');
+
+function openServiceModal(key) {
+  const info = SERVICE_INFO[key];
+  if (!info || !serviceModal) return;
+  serviceModalIcon.textContent = info.icon;
+  serviceModalTitle.textContent = info.title;
+  serviceModalDesc.textContent = info.desc;
+  serviceModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeServiceModal() {
+  serviceModal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+if (serviceModal && serviceClose) {
+  document.querySelectorAll('.service-card').forEach((card) => {
+    card.addEventListener('click', () => openServiceModal(card.dataset.service));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openServiceModal(card.dataset.service);
+      }
+    });
+  });
+  serviceClose.addEventListener('click', closeServiceModal);
+  serviceModal.addEventListener('click', (e) => {
+    if (e.target === serviceModal) closeServiceModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && serviceModal.classList.contains('open')) closeServiceModal();
+  });
 }
 
 // Quote form — submits to Formspree via fetch so the modal stays open

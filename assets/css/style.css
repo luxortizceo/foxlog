@@ -311,12 +311,14 @@ p { margin: 0 0 1em; color: var(--gray-600); }
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid var(--gray-300);
+  cursor: pointer;
   transition: transform .2s ease, box-shadow .2s ease;
 }
-.service-card:hover {
+.service-card:hover, .service-card:focus-visible {
   transform: translateY(-6px);
   box-shadow: var(--shadow);
 }
+.service-card:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 .service-media { aspect-ratio: 4/3; overflow: hidden; }
 .service-media img {
   width: 100%; height: 100%; object-fit: cover;
@@ -327,6 +329,135 @@ p { margin: 0 0 1em; color: var(--gray-600); }
 .service-icon { font-size: 1.6rem; }
 .service-body h3 { font-size: 1.15rem; margin-top: 10px; }
 .service-body p { font-size: 0.92rem; margin-bottom: 0; }
+.service-more {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--orange-dark);
+}
+
+/* ---------- Coverage: route network ---------- */
+.coverage { padding: 100px 0 80px; background: var(--ink); overflow: hidden; }
+.coverage .section-lead.light { max-width: 620px; }
+
+.coverage-map {
+  position: relative;
+  max-width: 920px;
+  width: calc(100% - 48px);
+  aspect-ratio: 630 / 470;
+  margin: 56px auto 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.6);
+}
+.coverage-map-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.coverage-map-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(11, 12, 15, 0.55) 0%, rgba(11, 12, 15, 0.25) 40%, rgba(11, 12, 15, 0.55) 100%),
+    linear-gradient(90deg, rgba(11, 12, 15, 0.35) 0%, rgba(11, 12, 15, 0.05) 50%, rgba(11, 12, 15, 0.35) 100%);
+}
+.coverage-map-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.route {
+  fill: none;
+  stroke: var(--orange);
+  stroke-width: 4.25;
+  stroke-linecap: round;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 5px rgba(240, 100, 30, 0.7));
+}
+
+.node-dot {
+  fill: var(--ink);
+  stroke: var(--orange);
+  stroke-width: 4.5;
+}
+.node-dot-gateway {
+  fill: var(--orange);
+  stroke: var(--orange-light);
+}
+.node-pulse {
+  fill: none;
+  stroke: var(--orange);
+  stroke-width: 3.5;
+  opacity: 0;
+  transform-origin: 362px 377px;
+  animation: node-pulse-ring 2.6s ease-out infinite;
+}
+@keyframes node-pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+.coverage-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.5);
+}
+.coverage-label small {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gray-300);
+}
+.coverage-label-gateway {
+  transform: translate(-50%, -120%);
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.coverage-label:not(.coverage-label-gateway) { transform: translate(-50%, -155%); }
+
+@media (max-width: 640px) {
+  .coverage-map { width: calc(100% - 24px); }
+  .coverage-label { font-size: 0.72rem; }
+  .coverage-label-gateway { font-size: 0.85rem; }
+  .coverage-label small { font-size: 0.6rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node-pulse { animation: none; opacity: 0; }
+}
+
+/* ---------- Utility ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* ---------- About ---------- */
 .about { padding: 100px 0; background: var(--gray-100); }
@@ -609,6 +740,17 @@ p { margin: 0 0 1em; color: var(--gray-600); }
   justify-content: center;
 }
 .modal-close:hover { background: var(--gray-300); }
+.modal-service-icon {
+  display: block;
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+}
+#service-modal-desc {
+  color: var(--gray-600);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
 .modal-info {
   background: rgba(240, 100, 30, 0.08);
   border: 1px solid rgba(240, 100, 30, 0.25);

@@ -31,6 +31,7 @@
 
     <nav class="main-nav" id="main-nav">
       <a href="#servicios">Servicios</a>
+      <a href="#cobertura">Cobertura</a>
       <a href="#nosotros">Nosotros</a>
       <a href="#proceso">Proceso</a>
       <a href="#testimonios">Clientes</a>
@@ -105,50 +106,103 @@
       </p>
 
       <div class="services-grid">
-        <article class="service-card">
+        <article class="service-card" data-service="terrestre" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="service-media">
             <img src="assets/img/truck.webp" alt="Transporte terrestre FoxLog" loading="lazy">
           </div>
           <div class="service-body">
             <span class="service-icon">🚛</span>
             <h3>Transporte terrestre</h3>
-            <p>Cobertura puerta a puerta con flota propia y aliados en toda la región, ideal para cargas urgentes y de última milla.</p>
+            <p>Arrastre de contenedor y flete nacional.</p>
+            <span class="service-more">Ver más →</span>
           </div>
         </article>
 
-        <article class="service-card">
+        <article class="service-card" data-service="aereo" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="service-media">
             <img src="assets/img/plane.webp" alt="Transporte aéreo FoxLog" loading="lazy">
           </div>
           <div class="service-body">
             <span class="service-icon">✈️</span>
             <h3>Transporte aéreo</h3>
-            <p>Envíos urgentes con tránsitos de 24 a 72 horas hacia los principales hubs aéreos del mundo.</p>
+            <p>Envíos urgentes en 24–72 horas.</p>
+            <span class="service-more">Ver más →</span>
           </div>
         </article>
 
-        <article class="service-card">
+        <article class="service-card" data-service="maritimo" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="service-media">
             <img src="assets/img/ship.webp" alt="Transporte marítimo FoxLog" loading="lazy">
           </div>
           <div class="service-body">
             <span class="service-icon">🚢</span>
             <h3>Transporte marítimo</h3>
-            <p>Carga FCL y LCL con las navieras más confiables del mercado, la opción más eficiente para grandes volúmenes.</p>
+            <p>Presencia directa en 4 puertos clave.</p>
+            <span class="service-more">Ver más →</span>
           </div>
         </article>
 
-        <article class="service-card">
+        <article class="service-card" data-service="ferroviario" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="service-media">
             <img src="assets/img/train.webp" alt="Transporte ferroviario FoxLog" loading="lazy">
           </div>
           <div class="service-body">
             <span class="service-icon">🚆</span>
             <h3>Transporte ferroviario</h3>
-            <p>Alternativa sostenible y de gran capacidad para cargas de alto tonelaje en rutas continentales.</p>
+            <p>Gran capacidad, rutas continentales.</p>
+            <span class="service-more">Ver más →</span>
           </div>
         </article>
       </div>
+    </div>
+  </section>
+
+  <!-- MODAL DE SERVICIO -->
+  <div class="modal-overlay" id="service-modal">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="service-modal-title">
+      <button type="button" class="modal-close" id="service-close" aria-label="Cerrar">✕</button>
+      <span class="modal-service-icon" id="service-modal-icon"></span>
+      <h3 id="service-modal-title"></h3>
+      <p id="service-modal-desc"></p>
+    </div>
+  </div>
+
+  <!-- COBERTURA -->
+  <section class="coverage" id="cobertura">
+    <div class="container">
+      <p class="section-eyebrow light">Cobertura</p>
+      <h2 class="section-title light">Del puerto a la frontera, en una sola red</h2>
+      <p class="section-lead light">Operamos directamente en los puertos clave de México y llevamos tu carga hasta Laredo, Texas: el cruce fronterizo más importante del país para el comercio con Estados Unidos.</p>
+    </div>
+
+    <div class="coverage-map">
+      <img class="coverage-map-bg" src="assets/img/coverage-map.jpg" alt="" loading="lazy" aria-hidden="true">
+      <div class="coverage-map-overlay" aria-hidden="true"></div>
+
+      <svg class="coverage-map-svg" viewBox="0 0 1200 895" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <path class="route" d="M600,385 Q480,380 362,377" />
+        <path class="route" d="M552,555 Q450,460 362,377" />
+        <path class="route" d="M300,587 Q320,480 362,377" />
+        <path class="route" d="M334,645 Q340,510 362,377" />
+
+        <circle class="node-pulse" cx="362" cy="377" r="11" />
+        <circle class="node-dot node-dot-gateway" cx="362" cy="377" r="11" />
+        <circle class="node-dot" cx="600" cy="385" r="8.5" />
+        <circle class="node-dot" cx="552" cy="555" r="8.5" />
+        <circle class="node-dot" cx="300" cy="587" r="8.5" />
+        <circle class="node-dot" cx="334" cy="645" r="8.5" />
+      </svg>
+
+      <span class="coverage-label coverage-label-gateway" style="left:30.17%; top:42.12%;">
+        Laredo, TX
+        <small>Puerta de entrada a EE. UU.</small>
+      </span>
+      <span class="coverage-label" style="left:50%; top:43.02%;">Altamira</span>
+      <span class="coverage-label" style="left:46%; top:62.01%;">Veracruz</span>
+      <span class="coverage-label" style="left:25%; top:65.59%;">Manzanillo</span>
+      <span class="coverage-label" style="left:27.83%; top:72.07%;">Lázaro Cárdenas</span>
+
+      <p class="sr-only">Red de cobertura de FoxLog: puertos de Altamira, Veracruz, Manzanillo y Lázaro Cárdenas conectados con Laredo, Texas.</p>
     </div>
   </section>
 
