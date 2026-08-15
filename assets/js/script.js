@@ -338,7 +338,17 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
   function step(dir) {
     const slideWidth = slides[0].getBoundingClientRect().width;
     const gap = parseFloat(getComputedStyle(track).gap || '0');
-    viewport.scrollBy({ left: dir * (slideWidth + gap), behavior: 'smooth' });
+    const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+
+    // Loop around: "next" past the last slide wraps to the start, "prev"
+    // before the first slide wraps to the end.
+    if (dir > 0 && viewport.scrollLeft >= maxScroll - 4) {
+      viewport.scrollTo({ left: 0, behavior: 'smooth' });
+    } else if (dir < 0 && viewport.scrollLeft <= 4) {
+      viewport.scrollTo({ left: maxScroll, behavior: 'smooth' });
+    } else {
+      viewport.scrollBy({ left: dir * (slideWidth + gap), behavior: 'smooth' });
+    }
   }
   if (prevBtn) prevBtn.addEventListener('click', () => step(-1));
   if (nextBtn) nextBtn.addEventListener('click', () => step(1));
