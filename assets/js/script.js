@@ -300,26 +300,36 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
   const dotsWrap = carousel.querySelector('[data-carousel-dots]');
   if (!viewport || !track || !slides.length) return;
 
+  // currentIndex is the authoritative "which slide is current" counter for
+  // arrow/dot navigation. It's driven only by explicit navigation, not by
+  // what's geometrically visible — with several slides on screen at once,
+  // the viewport can't scroll past its last group, so a visibility-based
+  // index would stall a few clicks before the last slide. Advancing the
+  // counter by exactly one per click instead guarantees every slide gets
+  // its own click, and the wrap happens right after the last one.
+  let currentIndex = 0;
+
+  function goTo(index) {
+    currentIndex = index;
+    dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+    slides[index].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+  }
+
   // Dots: one per slide.
   const dots = slides.map((_, i) => {
     const dot = document.createElement('button');
     dot.type = 'button';
     dot.className = 'fleet-dot';
     dot.setAttribute('aria-label', `Ir al elemento ${i + 1}`);
-    dot.addEventListener('click', () => {
-      slides[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-    });
+    dot.addEventListener('click', () => goTo(i));
     dotsWrap.appendChild(dot);
     return dot;
   });
+  dots[0].classList.add('is-active');
 
-  function setActive(index) {
-    slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
-    dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
-  }
-  setActive(0);
-
-  // Track which slide is most visible to sync dots + the mobile "active" glow.
+  // Separately, track which slide is most visible to drive the mobile
+  // "centered slide glows orange" effect — independent of the click counter
+  // above, since it reflects actual on-screen position during a swipe/drag.
   if ('IntersectionObserver' in window) {
     const ratios = new Map();
     const io = new IntersectionObserver((entries) => {
@@ -330,25 +340,16 @@ document.querySelectorAll('[data-carousel]').forEach((carousel) => {
         const r = ratios.get(s) || 0;
         if (r > bestRatio) { bestRatio = r; bestIndex = i; }
       });
-      setActive(bestIndex);
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === bestIndex));
     }, { root: viewport, threshold: [0.25, 0.5, 0.75, 1] });
     slides.forEach((s) => io.observe(s));
   }
 
+  // Arrows move one slide at a time through every individual slide (not by
+  // visible group), so "next" only reaches the end after walking through
+  // all of them, and wraps to the start right after the last one.
   function step(dir) {
-    const slideWidth = slides[0].getBoundingClientRect().width;
-    const gap = parseFloat(getComputedStyle(track).gap || '0');
-    const maxScroll = viewport.scrollWidth - viewport.clientWidth;
-
-    // Loop around: "next" past the last slide wraps to the start, "prev"
-    // before the first slide wraps to the end.
-    if (dir > 0 && viewport.scrollLeft >= maxScroll - 4) {
-      viewport.scrollTo({ left: 0, behavior: 'smooth' });
-    } else if (dir < 0 && viewport.scrollLeft <= 4) {
-      viewport.scrollTo({ left: maxScroll, behavior: 'smooth' });
-    } else {
-      viewport.scrollBy({ left: dir * (slideWidth + gap), behavior: 'smooth' });
-    }
+    goTo((currentIndex + dir + slides.length) % slides.length);
   }
   if (prevBtn) prevBtn.addEventListener('click', () => step(-1));
   if (nextBtn) nextBtn.addEventListener('click', () => step(1));
