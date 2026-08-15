@@ -279,3 +279,113 @@ if (quoteForm) {
 // Footer year
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+// Coverage fleet CTAs ("Cotiza ahora") open the same quote modal as the
+// rest of the site instead of a second form.
+document.querySelectorAll('.js-quote-cta').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    if (typeof openQuoteModal === 'function') openQuoteModal();
+  });
+});
+
+// Coverage fleet carousels: drag-to-scroll on desktop, native swipe on
+// touch, arrow/dot navigation, and an "active slide" highlight that takes
+// over the hover glow on touch devices (which have no hover).
+document.querySelectorAll('[data-carousel]').forEach((carousel) => {
+  const viewport = carousel.querySelector('[data-carousel-viewport]');
+  const track = carousel.querySelector('[data-carousel-track]');
+  const slides = Array.from(carousel.querySelectorAll('[data-carousel-slide]'));
+  const prevBtn = carousel.querySelector('[data-carousel-prev]');
+  const nextBtn = carousel.querySelector('[data-carousel-next]');
+  const dotsWrap = carousel.querySelector('[data-carousel-dots]');
+  if (!viewport || !track || !slides.length) return;
+
+  // Dots: one per slide.
+  const dots = slides.map((_, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'fleet-dot';
+    dot.setAttribute('aria-label', `Ir al elemento ${i + 1}`);
+    dot.addEventListener('click', () => {
+      slides[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+    });
+    dotsWrap.appendChild(dot);
+    return dot;
+  });
+
+  function setActive(index) {
+    slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+    dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+  }
+  setActive(0);
+
+  // Track which slide is most visible to sync dots + the mobile "active" glow.
+  if ('IntersectionObserver' in window) {
+    const ratios = new Map();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => ratios.set(entry.target, entry.intersectionRatio));
+      let bestIndex = 0;
+      let bestRatio = -1;
+      slides.forEach((s, i) => {
+        const r = ratios.get(s) || 0;
+        if (r > bestRatio) { bestRatio = r; bestIndex = i; }
+      });
+      setActive(bestIndex);
+    }, { root: viewport, threshold: [0.25, 0.5, 0.75, 1] });
+    slides.forEach((s) => io.observe(s));
+  }
+
+  function step(dir) {
+    const slideWidth = slides[0].getBoundingClientRect().width;
+    const gap = parseFloat(getComputedStyle(track).gap || '0');
+    viewport.scrollBy({ left: dir * (slideWidth + gap), behavior: 'smooth' });
+  }
+  if (prevBtn) prevBtn.addEventListener('click', () => step(-1));
+  if (nextBtn) nextBtn.addEventListener('click', () => step(1));
+
+  // Desktop mouse drag-to-scroll (touch devices already scroll natively).
+  let isDown = false;
+  let startX = 0;
+  let startScroll = 0;
+  let moved = false;
+
+  viewport.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    isDown = true;
+    moved = false;
+    startX = e.clientX;
+    startScroll = viewport.scrollLeft;
+    viewport.classList.add('is-dragging');
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!isDown) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    viewport.scrollLeft = startScroll - dx;
+  });
+  function endDrag() {
+    if (!isDown) return;
+    isDown = false;
+    viewport.classList.remove('is-dragging');
+  }
+  window.addEventListener('pointerup', endDrag);
+  window.addEventListener('pointercancel', endDrag);
+  // Suppress the click that follows a drag so it doesn't feel like a mis-tap.
+  viewport.addEventListener('click', (e) => { if (moved) e.stopPropagation(); }, true);
+});
+
+// Coverage fleet blocks: fade + rise into view once, like the rest of the
+// page's scroll-triggered moments.
+if ('IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+} else {
+  document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+}
