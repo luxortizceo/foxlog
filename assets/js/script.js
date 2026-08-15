@@ -180,7 +180,7 @@ const SERVICE_INFO = {
   terrestre: {
     icon: '🚛',
     title: 'Transporte terrestre',
-    desc: 'Nuestra especialidad: arrastre de contenedor del puerto a tu bodega o al ferrocarril, y flete nacional en las principales zonas del país. Importación y exportación directa hacia Laredo, Texas, el cruce fronterizo más importante para el comercio con Estados Unidos.',
+    desc: 'Expertos en arrastre de contenedores de los principales puertos y fletes nacionales en las principales zonas industriales del país. Importaciones y exportaciones a Estados Unidos.',
   },
   aereo: {
     icon: '✈️',
@@ -194,8 +194,8 @@ const SERVICE_INFO = {
   },
   ferroviario: {
     icon: '🚆',
-    title: 'Transporte ferroviario',
-    desc: 'Alternativa sostenible y de alto tonelaje para cargas de gran volumen en rutas continentales, con menor costo por unidad transportada.',
+    title: 'Carga contenerizada',
+    desc: 'Realizamos el arrastre de contenedores marítimos a nivel nacional para importaciones y exportaciones.',
   },
 };
 
