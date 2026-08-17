@@ -244,6 +244,11 @@ p { margin: 0 0 1em; color: var(--gray-600); }
   font-size: clamp(2.2rem, 4.5vw, 3.4rem);
   margin-bottom: 20px;
 }
+.hero h1.hero-title-split {
+  text-align: center;
+  font-size: clamp(1.15rem, 3.1vw, 2.45rem);
+}
+.hero-title-split span { display: block; }
 .hero-lead {
   color: var(--gray-300);
   font-size: 1.1rem;
