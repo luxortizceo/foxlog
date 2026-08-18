@@ -448,7 +448,7 @@ p { margin: 0 0 1em; color: var(--gray-600); }
 
 .fleet-slide {
   position: relative;
-  flex: 0 0 calc((100% - 36px) / 3);
+  flex: 0 0 100%;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -575,7 +575,6 @@ p { margin: 0 0 1em; color: var(--gray-600); }
 @media (max-width: 960px) {
   .fleet-grid { grid-template-columns: 1fr; }
   .fleet-intro { padding-right: 0; margin-bottom: 28px; }
-  .fleet-slide { flex: 0 0 calc((100% - 18px) / 2); }
 }
 
 @media (max-width: 640px) {
@@ -583,7 +582,6 @@ p { margin: 0 0 1em; color: var(--gray-600); }
   .fleet-block + .fleet-block { margin-top: 64px; }
   .fleet-carousel { grid-template-columns: 1fr; gap: 6px; }
   .fleet-arrow { display: none; }
-  .fleet-slide { flex: 0 0 84%; }
   .fleet-dots { grid-column: 1; }
 }
 
